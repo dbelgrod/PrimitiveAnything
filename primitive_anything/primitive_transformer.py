@@ -17,8 +17,8 @@ import torch
 from torch import nn, Tensor
 from torch.nn import Module, ModuleList
 import torch.nn.functional as F
-from pytorch3d.loss import chamfer_distance
-from pytorch3d.transforms import euler_angles_to_matrix
+# Use compatibility layer to support systems without pytorch3d (e.g., Mac M1/M2)
+from .pytorch3d_compat import chamfer_distance, euler_angles_to_matrix
 from x_transformers import Decoder
 from x_transformers.x_transformers import LayerIntermediates
 from x_transformers.autoregressive_wrapper import eval_decorator
@@ -476,9 +476,11 @@ class PrimitiveTransformerDiscrete(Module, PyTorchModelHubMixin):
 
         batch_size = default(batch_size, 1)
 
-        scale = default(scale, torch.empty((batch_size, 0, 3), dtype=torch.float64, device=self.device))
-        rotation = default(rotation, torch.empty((batch_size, 0, 3), dtype=torch.float64, device=self.device))
-        translation = default(translation, torch.empty((batch_size, 0, 3), dtype=torch.float64, device=self.device))
+        # Use float32 for MPS compatibility (MPS doesn't support float64)
+        float_dtype = torch.float32 if self.device.type == 'mps' else torch.float64
+        scale = default(scale, torch.empty((batch_size, 0, 3), dtype=float_dtype, device=self.device))
+        rotation = default(rotation, torch.empty((batch_size, 0, 3), dtype=float_dtype, device=self.device))
+        translation = default(translation, torch.empty((batch_size, 0, 3), dtype=float_dtype, device=self.device))
         type_code = default(type_code, torch.empty((batch_size, 0), dtype=torch.int64, device=self.device))
 
         curr_length = scale.shape[1]
