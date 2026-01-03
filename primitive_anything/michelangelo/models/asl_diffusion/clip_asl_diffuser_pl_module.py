@@ -103,7 +103,7 @@ class ClipASLDiffuser(pl.LightningModule):
         self.cond_stage_model = self.instantiate_non_trainable_model(cond_stage_config)
 
     def init_from_ckpt(self, path, ignore_keys=()):
-        state_dict = torch.load(path, map_location="cpu")["state_dict"]
+        state_dict = torch.load(path, map_location="cpu", weights_only=False)["state_dict"]
 
         keys = list(state_dict.keys())
         for k in keys:
