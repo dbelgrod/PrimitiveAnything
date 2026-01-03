@@ -1,0 +1,105 @@
+[project]
+name = "primitive-anything"
+version = "0.1.0"
+description = "PrimitiveAnything: 3D primitive assembly generation with Tripo3D text-to-3D integration"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [
+    { name = "PrimitiveAnything Team" }
+]
+keywords = ["3d", "primitive", "generation", "text-to-3d", "tripo3d", "ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+
+dependencies = [
+    # Core dependencies for PrimitiveAnything
+    "torch>=2.0.0",
+    "numpy>=1.24.0",
+    "omegaconf>=2.3.0",
+    "einops>=0.7.0",
+    "pytorch3d>=0.7.0",
+    "open3d>=0.17.0",
+    "trimesh>=4.0.0",
+    "transformers>=4.30.0",
+    "x-transformers>=1.27.0",
+    "gateloop-transformer>=0.2.0",
+    "beartype>=0.18.0",
+    "accelerate>=0.25.0",
+    "huggingface-hub>=0.20.0",
+    "tqdm>=4.65.0",
+
+    # Tripo3D API integration
+    "tripo3d>=0.3.0",
+    "aiohttp>=3.9.0",
+
+    # Web app dependencies
+    "flask>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=24.0.0",
+    "ruff>=0.1.0",
+]
+gradio = [
+    "gradio>=4.0.0",
+]
+
+[project.scripts]
+tripo-test = "tripo_test:main"
+tripo-web = "tripo_web:main"
+primitive-web = "primitive_web:main"
+
+[project.urls]
+Homepage = "https://github.com/example/primitive-anything"
+Documentation = "https://github.com/example/primitive-anything#readme"
+Repository = "https://github.com/example/primitive-anything"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["primitive_anything"]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=24.0.0",
+    "ruff>=0.1.0",
+]
+
+[tool.uv.sources]
+# pytorch3d often needs special handling
+# pytorch3d = { git = "https://github.com/facebookresearch/pytorch3d.git" }
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
